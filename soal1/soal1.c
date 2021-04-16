@@ -231,8 +231,8 @@ while(1){
  char b_day[100];
  struct tm *tmp = localtime(&t);
  strftime(b_day,sizeof(b_day),"%d-%b %H:%M",tmp);
- char target1[]="16-Apr 18:38";
- char target2[]="16-Apr 18:39";
+ char target1[]="9-Apr 16:22";
+ char target2[]="9-Apr 22:22";
 
 
 	pid_t child, child2;
