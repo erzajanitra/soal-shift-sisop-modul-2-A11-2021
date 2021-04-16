@@ -3,7 +3,7 @@
 ## Soal 1 
 
 ## Soal 2
-[no 2](soal2.c)
+[no 2](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal2/soal2.c)
 ### 2a
 **Soal** : Pertama-tama program perlu mengextract zip yang diberikan ke dalam folder “/home/[user]/modul2/petshop”. Karena bos Loba teledor, dalam zip tersebut bisa berisi folder-folder yang tidak penting, maka program harus bisa membedakan file dan folder sehingga dapat memproses file yang seharusnya dikerjakan dan menghapus folder-folder yang tidak dibutuhkan.
 * Mengextract zip kemudian disimpan di folder ``petshop``
