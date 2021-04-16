@@ -154,15 +154,22 @@ void do_something(){
  	}
 
 	if(child_id == 0){
+		
+		for(i=0;i<3;i++){
+			makedir(files[i]);
+		}
 		for(i=0;i<3;i++){
 			download(links[i],oldfiles[i]);
-			sleep(5);
+		}
+		for(i=0;i<3;i++){
 			unzip(oldfiles[i]);
-			makedir(files[i]);
+		}
+		for(i=0;i<3;i++){
 			move(folders[i],files[i]);
 		}
+			
 	}else{
-		while((wait(&status))<0);
+		wait(&status); return;
 	}
 }
 
@@ -246,13 +253,15 @@ if (child < 0){
 if (child == 0){
 
 	if(strcmp(b_day,target1)==0){
-		printf("Berhasil Target 1\n");
+//printf("Berhasil Target 1\n");
 		do_something();
+		sleep(40);
 	}
 
 	if(strcmp(b_day,target2)==0){
-		printf("Berhasil Target 2\n");
+//printf("Berhasil Target 2\n");
 		zipfolders();
+		sleep(45);
 	}
 
 }else{
