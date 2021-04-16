@@ -87,12 +87,91 @@ memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuh
   
 ### 2c
 **Soal** : Setelah folder kategori berhasil dibuat, programmu akan memindahkan foto ke folder dengan kategori yang sesuai dan di rename dengan nama peliharaan.
-
-
+* Memindahkan foto ke folder dengan kategori yang sesuai
+```
+              char fileku[80];
+              strcpy(fileku,"/home/erzajanitra/modul2/petshop/");
+              strcat(fileku,dent->d_name);
+              
+              //file destination
+              char dest[80];
+              strcpy(dest,"/home/erzajanitra/modul2/petshop/");
+              strcat(dest,pet); 
+              strcat(dest,"/"); 
+              strcat(dest,pName); 
+              strcat(dest,".jpg");
+              char *argv[]={"cp",fileku,dest,NULL};
+              func1("/bin/cp",argv);
+```
+  *char fileku* digunakan untuk menyimpan path file source, sedangkan *char dest* digunakan untuk menyimpan file tujuan. *strcat* untuk menambahkan string pada path */home/erzajanitra/modul2/petshop/* sehingga foto dapat dipindahkan ke folder kategori yang sesuai, dengan nama file foto yang sesuai. 
+* Menghapus foto yang telah dipindahkan ke folder
+```
+    char hapus[60]="/home/erzajanitra/modul2/petshop/";
+        strcat(hapus,dent->d_name);
+        char *args[]={"rm",hapus,NULL};
+        execv("/bin/rm",args);
+```
+   File foto yang sudah dipindahkan ke folder dengan kategori masing-masing di remove karena sudah tidak diperlukan.
+   
 ### 2d
 **Soal** : Karena dalam satu foto bisa terdapat lebih dari satu peliharaan maka foto harus di pindah ke masing-masing kategori yang sesuai
+```
+    while(photos=strtok_r(cutss,"_",&cutss)){
+            int i=0;
+            char pet[30], pName[30], pAge[30];
+            char *ph=photos;
+            char *photo;
+            while(photo=strtok_r(ph,";",&ph)){
+                if(i==0){
+                  //buat folder sesuai nama pets
+                    char files[80]="/home/erzajanitra/modul2/petshop/";
+                    strcat(files,photo);
+                    char *argv[]={"mkdir","-p",files,NULL};
+                    func1("/bin/mkdir",argv);
+                    strcpy(pet,photo);
+                }
+                 if(i==1){
+                  //nama pets
+                  strcpy(pName,photo);
+                }
+                if(i==2){
+                  //umurnya pets
+                  strcpy(pAge,photo);
+                }
 
+              i++;
+            }
+```
+   Untuk satu foto yang terdiri dari 2 hewan peliharaan ditandai dengan _ yang memisahkan masing-masing kategori dan nama hewan peliharaan tersebut. Maka menggunakan *strtok_r* untuk memotong kedua kategori hewan peliharaan tersebut, kemudian kategori, nama, dan umur masing-masing disimpan pada sebuah *char*. Sehingga, foto yang terdiri dari 1 hewan peliharaan dapat berada di 2 folder kategori berbeda, dengan nama sesuai kategori hewan tersebut.
 ### 2e
 **Soal** : Di setiap folder buatlah sebuah file "keterangan.txt" yang berisi nama dan umur semua peliharaan dalam folder tersebut. 
+* Membuat file ``keterangan.txt`` pada masing-masing folder kategori
+```
+     //keterangan.txt di masing2 folder pets
+          char file[50];
+          strcpy(file,"/home/erzajanitra/modul2/petshop/");
+          strcat(file,pet);
+          strcat(file,"/keterangan.txt");
+```
+   File ``keterangan.txt`` dibutuhkan untuk menampilkan informasi nama dan umur untuk masing-masing hewan peliharaan pada masing-masing kategori hewan peliharaan. Agar file tersebut disimpan pada folder kategori yang sesuai, kita harus memastikan bahwa path penyimpanannya sesuai. Oleh karena itu, menggunakan *strcat* untuk *"/home/erzajanitra/modul2/petshop/"* dengan *pet* sebagai kategori hewan peliharaan.
+* Membuat isi file ``keterangan.txt``
+```       
+          char ch[50];
+          strcat(ch,"nama : ");
+          strcat(ch,pName);
+          strcat(ch,"\numur: ");
+          strcat(ch,pAge);
+          strcat(ch,"tahun\n\n");
+  ```
+   Pada proses sebelumnya, nama dan umur masing-masing disimpan pada *pName* dan *pAge* sehingga untuk menampilkan isi file ``keterangan.txt`` dapat menggunakan *strcat*. *strcat* digunakan untuk menggabungkan string *pName* dan *pAge* sesuai format pada contoh soal.
+* Membuat file ``keterangan.txt``
+```
+          //buat keterangan.txt
+          FILE *fp;
+          fp=fopen(file,"a");
+          fputs(ch,fp);
 
+          fclose(fp);
+ ```
+   Membuat file pada directory path yang sudah dibuat dengan mode *append* sehingga dapat menambahkan informasi baru tanpa menghapus isi file yang sudah ada. *fputs* digunakan untuk memasukkan isi file dari *char ch* yang telah dibuat pada file *fp*.
 ## Soal 3
