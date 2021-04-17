@@ -129,19 +129,19 @@ int main() {
               func1("/bin/cp",argv);
             
             
-          //isi file keterangan.txt
+          //keterangan.txt di masing2 folder pets
+          char file[50];
+          strcpy(file,"/home/erzajanitra/modul2/petshop/");
+          strcat(file,pet);
+          strcat(file,"/keterangan.txt");
+          
+           //isi file keterangan.txt
           char ch[50];
           strcat(ch,"nama : ");
           strcat(ch,pName);
           strcat(ch,"\numur: ");
           strcat(ch,pAge);
           strcat(ch,"tahun\n\n");
-
-          //keterangan.txt di masing2 folder pets
-          char file[50];
-          strcpy(file,"/home/erzajanitra/modul2/petshop/");
-          strcat(file,pet);
-          strcat(file,"/keterangan.txt");
           
           //buat keterangan.txt
           FILE *fp;
