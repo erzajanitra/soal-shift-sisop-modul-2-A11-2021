@@ -12,7 +12,7 @@
 #include <unistd.h>
 
  char *files[] = {"Musyik","Pyoto","Fylm"};
- char *oldfiles[] = {"Musik_for_Stevany","Foto_for_Stevany","Film_for_Stevany"};
+ char *oldfiles[] = {"Musik_for_Stevany.zip","Foto_for_Stevany.zip","Film_for_Stevany.zip"};
  char *folders[] = {"MUSIK","FOTO","FILM"};
  char *links[] = {"drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download",
 "drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download",
@@ -239,7 +239,7 @@ while(1){
  struct tm *tmp = localtime(&t);
  strftime(b_day,sizeof(b_day),"%Y-%m-%d %H:%M:%S",tmp);
  char target1[]="2021-04-09 16:21:59";
- char target2[]="20210-04-09 22:21:59";
+ char target2[]="2021-04-09 22:21:59";
 
 
 	pid_t child, child2;
