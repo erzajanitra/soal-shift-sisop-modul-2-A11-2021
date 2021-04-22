@@ -174,4 +174,177 @@ memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuh
           fclose(fp);
  ```
    Membuat file pada directory path yang sudah dibuat dengan mode *append* sehingga dapat menambahkan informasi baru tanpa menghapus isi file yang sudah ada. *fputs* digunakan untuk memasukkan isi file dari *char ch* yang telah dibuat pada file *fp*.
+
+### Kendala yang dialami
+1. **No 2a**
+   - Tidak bisa mengunzip pets.zip. Solusinya, kami harus menggunakan *usr* pada *execv(/usr/bin/unzip*) ketika mengunzip pets.zip.
+   - Ketika menghilangkan file yang tidak penting, terjadi eror untuk file *"."* dan *".."* karena kedua file tersebut merupakan hidden file. Solusinya, kami menggunakan *if-      else condition*  apabila memenuhi kondisi tersebut akan di continue
+2. Kami menggunakan strtok_r untuk memotong file name foto agar masing-masing potongan tersebut dapat disimpan di sebuah char dan digunakan untuk membuat folder dan isi file    keterangan.txt. Kendalanya yaitu tidak bisa membuat folder kategori, disebabkan file name yang dipotong tersebut memiliki .jpg pada akhir nama file. Oleh karena itu, kami    menggunakan fungsi ``cut`` untuk menghapus 4 indeks terakhir dari nama file.
+3. Pada saat memindahkan foto ke masing-masing folder kategori, ada beberapa file foto yang tidak berhasil dipindahkan. Hal itu disebabkan kami menggunakan ``func`` ketika      mengunzip. Dimana fungsi tersebut digunakan untuk mempersingkat fork sehingga akan melakukan wait apabila bukan proses child. Solusinya, kami menggunakan ``execv`` dan        proses setelah unzip diletakkan pada parent process.
+
+### Screenshoot Error
+1. Kendala no 1
+![image](https://user-images.githubusercontent.com/75319371/115656412-65331800-a35f-11eb-8ebc-76fdc43104ac.png)
+2. Kendala no 2
+![image](https://user-images.githubusercontent.com/75319371/115656289-2e5d0200-a35f-11eb-976a-33db40a1824a.png)
+
+### Hasil ketika berhasil melakukan semua proses
+* Folder kategori hewan peliharaan
+![image](https://user-images.githubusercontent.com/75319371/115656585-a4f9ff80-a35f-11eb-90ec-68780851d089.png)
+* Isi Folder (menggunakan contoh folder dog)
+![image](https://user-images.githubusercontent.com/75319371/115656651-bfcc7400-a35f-11eb-8356-40539f364842.png)
+
+
 ## Soal 3
+
+[no 3](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal3/soal3.c)
+### 3a
+**Soal** : Membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp **YYYY-mm-dd_HH:ii:ss**
+* Menggunakan timestamp untuk nama directory
+```
+     time_t t=time(NULL);
+    char fileName[100];
+    struct tm *tmp=localtime(&t);
+    strftime(fileName,sizeof(fileName),"%Y-%m-%d_%H:%M:%S", tmp);
+```
+   Timestamp didapatkan dari *localtome* saat ini yang kemudian disimpan pada sebuah char *fileName* dengan format *YYYY-mm-dd_HH:ii:ss*.    
+* Membuat directory
+```
+      char path[60]="/home/erzajanitra/modul2/";
+      strcat(path,fileName);
+      
+      char *argv[] = {"mkdir", "-p", path, NULL};
+      func1("/bin/mkdir", argv);
+```
+   Membuat directory dengan *mkdir* dan nama file yang digunakan adalah *fileName*, sesuai path dimana directory tersebut diletakkan.
+ 
+ ### 3b
+ **Soal** : Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap
+gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
+* Fungsi void ``downloadft``
+```
+     time_t t=time(NULL);
+      char fileName2[100];
+      struct tm *tmp=localtime(&t);
+      strftime(fileName2,sizeof(fileName2),"%Y-%m-%d_%H:%M:%S", tmp);
+      
+      //long long ts=time(NULL);
+      long int size=(t%1000)+50;
+      
+      char d[50];
+      strcpy(d,fn);
+      strcat(d,"/");
+      strcat(d,fileName2);
+
+      char link[50]={"https://picsum.photos/"};
+      char ps[50];
+      sprintf(ps,"%ld",size);
+      strcat(link,ps);
+      
+      //ILE *dst=fopen("get.txt","a");
+      //fprintf(dst,"halo");
+      //fclose(dst);
+
+      char *foto[] = {"wget","-bq",link,"-O",d,NULL};
+      execv("/usr/bin/wget",foto);
+```
+   Untuk mendownload 10 foto menggunakan *for loop* yang didalamnya memanggil fungsi ``downloadft`` dan menjalankan fungsi tersebut tiap 5 detik dengan *sleep(5)*. File nama foto menggunakan *timestamp* dengan cara seperti no **3a**. Detik Epoch Unix didapatkan dengan *time_t*. Destination path untuk foto disimpan pada *char d* dan link download foto disimpan pada *char link* yang di strcat dengan size foto tersebut.
+   
+ ### 3c
+  **Soal** : Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang
+terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan
+shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file
+tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
+* Penyelesaian no 3c menggunakan fungsi ``txtFile`` untuk membuat file *status.txt* dan mengenkripsi pesan didalamnya dengan Algoritma Caesar Cipher. Kemudian, membuat zip 10 file foto + *status.txt*
+* Membuat file *status.txt*
+```
+    char file[50];
+    strcpy(file,name);
+    strcat(file,"/status.txt");
+          
+    //isi file status.txt
+    char message[50],ch;
+    strcat(message,"Download Success");
+```
+   File *status.txt* dibuat pada masing-masing folder foto, maka dari itu menggunakan *strcat* untuk menggabungkan *status.txt* pada path masing-masing directory. Kemudian, file txt tersebut berisi pesan *Download Success*.
+* Enkripsi isi *status.txt* dengan Caesar Cipher
+```
+    FILE *fp;
+    fp=fopen(file,"w");
+
+    //caesar cipher
+    for(int i=0;message[i]!='\0';++i){
+      ch=message[i];
+      if(ch>='a' && ch<='z'){
+         ch=ch+5;
+        if(ch>'z'){
+           ch=ch-'z'+'a'-1;
+        }
+        message[i]=ch;
+      }
+      else if(ch>='A' && ch<='Z'){
+         ch=ch+5;
+         if(ch>'Z'){
+            ch=ch-'Z'+'A'-1;
+         }
+         message[i]=ch;
+        }
+      fputc(ch,fp);
+    }fclose(fp);
+ ```
+   File *status.txt* tersebut menggunakan mode write agar isi file tersebut bisa digantikan dengan hasil enkripsi pesan tersebut. Pesan yang telah dienkripsi disimpan pada file *status.txt* dengan nama file *fp*.
+  * Zip file
+  ```
+    
+    //zip file
+    char zips[50];
+    strcpy(zips,name);
+    strcat(zips,".zip");
+    char *argv[]={"zip","-rmq",zips,name,NULL};
+    execv("/usr/bin/zip",argv);
+```
+   Setelah file *status.txt* selesai dienkripsi, 10 foto yang telah didownload dan file *status.txt* dijadikan satu dalam sebuah file zip. Nama file zip tersebut adalah nama directory.   
+
+### 3d
+**Soal** : Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin program tersebut akan men-generate sebuah program “Killer” yang executable, dimana
+program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai
+sesuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat nantinya harus merupakan program bash.
+* Penyelesaian no 3d menggunakan fungsi ``fileKl`` untuk membuat script *killer.sh* 
+* Membuat file *killer.sh* 
+```
+    void fileKl(char *argv[], int pid){
+        //3d buat killer.sh
+        FILE *kill=fopen("killer.sh","w");
+        fprintf(kill,"#/bin/bash\n");
+```
+   Karena tidak diperbolehkan menggunakan system(), membuat file *killer.sh* dengan ``FILE *kill``. Kemudian file tersebut diisi dengan ``#/bin/bash`` karena merupakan sebuah shell script.
+ 
+### 3e
+**Soal** : Untuk mengaktifkan mode pertama, program harus dijalankan dengan argumen -z, dan Ketika dijalankan dalam mode pertama, program
+utama akan langsung menghentikan semua operasinya Ketika program Killer dijalankan. Sedangkan untuk mengaktifkan mode kedua, program harus dijalankan dengan
+argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai
+(Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori).
+* Penyelesaian no 3e juga menggunakan fungsi ``fileKl`` setelah membuat script *killer.sh*
+* Dua mode dengan argumen -z dan -x
+``` 
+         // arg -z menghentikan semua operasi
+         if(strcmp(argv[1],"-z")==0){
+          fprintf(kill,"killall -9 soal3\n");
+          }
+         //arg -x kill proses utama-->pid
+         else if(strcmp(argv[1], "-x")==0){
+          fprintf(kill,"kill -9 %d\n", pid);
+        }
+
+        //delete dir setelah selesai di zip
+         fprintf(kill,"rm killer.sh\n");
+         fclose(kill);
+ }
+```
+   Menggunakan *if-else condition* dan *strcmp* untuk pilihan mode yang diinginkan. Apabila **-z** akan memasukkan string ``killall -9 soal3`` untuk mematikan seluruh proses. Sementara itu, untuk **-x** akan memasukkan string ``kill -9 %d`` dimana *%d* adalah pid untuk mematikan proses utama. Sehingga apabila **-x** dijalankan, program akan menyelesaikan proses terakhir, baru kemudian berhenti.
+   
+### Kendala yang dialami
+1. Pada saat mengerjakan no 3b, kami tidak bisa mendownload foto dari link tersebut. Solusinya, kami harus menggunakan *usr* pada *execv(/usr/bin/wget*) ketika mendownload foto.
+2. Pada saat mengerjakan no 3e, kami tidak bisa menjalankan argumen **-x**. Seharusnya program akan menyelesaikan proses terakhir, baru kemudian berhenti. Tetapi, proses tetap berjalan. Permasalahan tersebut disebabkan kami menggunakan ``func1`` untuk mengezip file. Karena pada ``func1`` akan melakukan fork lagi, sehingga proses akan terus berjalan. Solusinya, kami menggunakan ``execv`` untuk mengezip file.
+
+### Screenshoot Error
