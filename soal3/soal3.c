@@ -10,6 +10,7 @@
 #include<time.h>
 #include<wait.h>
 
+//ini buat 3b
 void downloadft(char *fn){
   int status;
   pid_t pid;     
@@ -37,11 +38,11 @@ void downloadft(char *fn){
       sprintf(ps,"%ld",size);
       strcat(link,ps);
       
-      FILE *dst=fopen("get.txt","a");
-      fprintf(dst,"halo");
-      fclose(dst);
+      //ILE *dst=fopen("get.txt","a");
+      //fprintf(dst,"halo");
+      //fclose(dst);
 
-      char *foto[] = {"wget","-b",link,"-O",d,NULL};
+      char *foto[] = {"wget","-bq",link,"-O",d,NULL};
       execv("/usr/bin/wget",foto);
   }
    else{
@@ -65,33 +66,90 @@ void func1(char command[],char *arg[]){
    }
 }
 
-int main() {
+//ini 3c
+void txtFile(char *name){
+    char file[50];
+    strcpy(file,name);
+    strcat(file,"/status.txt");
+          
+    //isi file status.txt
+    char message[50],ch;
+    strcat(message,"Download Success");
+          
+    //buat keterangan.txt
+    FILE *fp;
+    fp=fopen(file,"w");
+
+    //caesar cipher
+    for(int i=0;message[i]!='\0';++i){
+      ch=message[i];
+      if(ch>='a' && ch<='z'){
+         ch=ch+5;
+        if(ch>'z'){
+           ch=ch-'z'+'a'-1;
+        }
+        message[i]=ch;
+      }
+      else if(ch>='A' && ch<='Z'){
+         ch=ch+5;
+         if(ch>'Z'){
+            ch=ch-'Z'+'A'-1;
+         }
+         message[i]=ch;
+        }
+      fputc(ch,fp);
+    }
+    
+    fclose(fp);
+    //zip file
+    char zips[50];
+    strcpy(zips,name);
+    strcat(zips,".zip");
+    char *argv[]={"zip","-rmq",zips,name,NULL};
+    execv("/usr/bin/zip",argv);
+}
+
+//ini 3d-e
+void fileKl(char *argv[], int pid){
+    //3d buat killer.sh
+    FILE *kill=fopen("killer.sh","w");
+    fprintf(kill,"#/bin/bash\n");
+
+    //3e 
+    // arg -z menghentikan semua operasi
+    if(strcmp(argv[1],"-z")==0){
+      fprintf(kill,"killall -9 soal3\n");
+    }
+    //arg -x kill proses utama-->pid
+    else if(strcmp(argv[1], "-x")==0){
+      fprintf(kill,"kill -9 %d\n", pid);
+    }
+
+    //delete dir setelah selesai di zip
+    fprintf(kill,"rm killer.sh\n");
+    fclose(kill);
+  
+}
+
+int main(int argc, char** argv) {
   pid_t pid,pid2, sid;        // Variabel untuk menyimpan PID
-
   pid = fork();     // Menyimpan PID dari Child Process
-
-  /* Keluar saat fork gagal
-  * (nilai variabel pid < 0) */
   if (pid < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  /* Keluar saat fork berhasil
-  * (nilai variabel pid adalah PID dari child process) */
+      exit(EXIT_FAILURE);
+    }
   if (pid > 0) {
-    exit(EXIT_SUCCESS);
-  }
-
+      exit(EXIT_SUCCESS);
+    }
   umask(0);
-
   sid = setsid();
   if (sid < 0) {
     exit(EXIT_FAILURE);
   }
-
   if ((chdir("/home/erzajanitra/modul2/")) < 0) {
     exit(EXIT_FAILURE);
   }
+  //untuk menjalankan argumen -z dan -x
+  fileKl(argv,(int)getpid());
 
   close(STDIN_FILENO);
   close(STDOUT_FILENO);
@@ -113,7 +171,6 @@ int main() {
            
     if (pid2== 0) {
       //nama folder dengan format date-time
-      
       char path[60]="/home/erzajanitra/modul2/";
       strcat(path,fileName);
       
@@ -121,26 +178,21 @@ int main() {
       char *argv[] = {"mkdir", "-p", path, NULL};
       func1("/bin/mkdir", argv);
 
-     //while((wait(NULL))>0);
-    //3b download 10 foto(/5 s)-> save di directory
-    //nama file foto sesuai timestamp
-    //ukuran (n%1000)+50 px 
-      pid_t pid3;
-      int status3;
-      if((pid3=fork())==0){
-        for(int i=0;i<10;i++){
-          
-          downloadft(fileName);
+    
+      for(int i=0;i<10;i++){
+        //3b 
+        downloadft(fileName);
           sleep(5);
-        }
       }
-      else{
-        while((wait(&status3))>0);
-        
+        //3c buat file status.txt -> caesar cipher shift 5
+        // zip, abis itu dir dihapus
+        //status.txt di masing2 folder pets
+         txtFile(fileName);
+
       }
       
+        sleep(40);    
     }
         
-    sleep(40);
+    
   }
-}
