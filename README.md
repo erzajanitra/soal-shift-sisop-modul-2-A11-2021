@@ -190,13 +190,12 @@ memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuh
 
 ### Hasil ketika berhasil melakukan semua proses
 * Folder kategori hewan peliharaan
-![image](https://user-images.githubusercontent.com/75319371/115656585-a4f9ff80-a35f-11eb-90ec-68780851d089.png)
+![image](https://user-images.githubusercontent.com/75319371/115656963-4ed98c00-a360-11eb-8d5e-a8a10c365310.png)
 * Isi Folder (menggunakan contoh folder dog)
-![image](https://user-images.githubusercontent.com/75319371/115656651-bfcc7400-a35f-11eb-8356-40539f364842.png)
+![er2](https://user-images.githubusercontent.com/75319371/115656904-35d0db00-a360-11eb-9507-69e801d6aa6c.JPG)
 
 
 ## Soal 3
-
 [no 3](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal3/soal3.c)
 ### 3a
 **Soal** : Membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp **YYYY-mm-dd_HH:ii:ss**
@@ -348,3 +347,11 @@ argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti 
 2. Pada saat mengerjakan no 3e, kami tidak bisa menjalankan argumen **-x**. Seharusnya program akan menyelesaikan proses terakhir, baru kemudian berhenti. Tetapi, proses tetap berjalan. Permasalahan tersebut disebabkan kami menggunakan ``func1`` untuk mengezip file. Karena pada ``func1`` akan melakukan fork lagi, sehingga proses akan terus berjalan. Solusinya, kami menggunakan ``execv`` untuk mengezip file.
 
 ### Screenshoot Error
+
+### Hasil ketika berhasil menjalankan semua proses
+* File zip foto dan *status.txt*
+![image](https://user-images.githubusercontent.com/75319371/115657308-d921f000-a360-11eb-9615-d0fb3cd4040d.png)
+* Isi *status.txt*
+![image](https://user-images.githubusercontent.com/75319371/115657386-f5be2800-a360-11eb-8559-7f9dffadfc7c.png)
+
+
