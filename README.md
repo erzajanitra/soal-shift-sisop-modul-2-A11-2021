@@ -1,6 +1,30 @@
 # soal-shift-sisop-modul-2-A11-2021
 
 ## Soal 1 
+[no 1]()
+
+### 1a
+**Soal** : (a) Dikarenakan Stevany sangat menyukai huruf Y, Steven ingin nama folder-foldernya adalah Musyik untuk mp3, Fylm untuk mp4, dan Pyoto untuk jpg.
+
+### 1b
+**Soal** : (b) untuk musik Steven mendownloadnya dari link di bawah, film dari link di bawah lagi, dan foto dari link dibawah juga :).
+
+### 1c
+**Soal** : (c) Steven tidak ingin isi folder yang dibuatnya berisikan zip, sehingga perlu meng-extract-nya setelah didownload.
+
+### 1d
+**Soal** : (d) serta memindahkannya ke dalam folder yang telah dibuat (hanya file yang dimasukkan).
+
+### 1e
+**Soal** : (e) Untuk memudahkan Steven, ia ingin semua hal di atas berjalan otomatis 6 jam sebelum waktu ulang tahun Stevany).
+
+### 1f
+**Soal** : (f) Setelah itu pada waktu ulang tahunnya Stevany, semua folder akan di zip dengan nama Lopyu_Stevany.zip dan semua folder akan di delete(sehingga hanya menyisakan .zip).
+
+### Kendala yang dialami
+
+
+
 
 ## Soal 2
 [no 2](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal2/soal2.c)
