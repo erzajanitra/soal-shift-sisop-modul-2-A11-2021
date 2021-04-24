@@ -39,7 +39,7 @@
     char *array2[]={"unzip","-q","pets.zip","-d","petshop",NULL};
     execv("/usr/bin/unzip",array2);
 ```
-  Menggunakan *mkdir* untuk membuat folder petshop pada directory */home/erzajanitra/modul2/*. Untuk mengextract zip menggunakan *unzip* dengan syntax *unzip,file source,file    destination,NULL*. *-q* digunakan agar log ketika melakukan extract tidak ditampilkan pada terminal
+  Menggunakan *mkdir* untuk membuat folder petshop pada directory */home/erzajanitra/modul2/*. Untuk mengextract zip menggunakan *unzip* dengan syntax *unzip,file source,file   destination,NULL*. *-q* digunakan agar log ketika melakukan extract tidak ditampilkan pada terminal. Untuk mengekseksui *mkdir* menggunakan ``func1`` yang merupakan fungsi    untuk mempersingkat fork. Fungsi tersebut akan mengeksekusi command apabila child process berhasil dibuat dan melakukan wait apabila merupakan parent process.
 * Menghapus folder yang tidak dibutuhkan
 ```
     DIR *dir=opendir("/home/erzajanitra/modul2/petshop");
@@ -58,11 +58,10 @@
                exit(EXIT_SUCCESS); 
          }
 ```
-  Menggunakan directory listing dengan library ``dirent.h`` untuk mengetahui isi folder yang telah di unzip. Karena file yang dibutuhkan hanya foto-foto dengan format *.jpg*, maka file yang berupa directory *DT_DIR* di remove.
+  Menggunakan directory listing dengan library ``dirent.h`` untuk mengetahui isi folder yang telah di unzip. Karena file yang dibutuhkan hanya foto-foto dengan format *.jpg*,   maka file yang berupa directory *DT_DIR* di remove. Kemudian, menggunakan ``func1`` untuk mempersingkat fork dan melakukan *exit* ketika selesai menghapus directory           tersebut.
 
 ### 2b
-**Soal** : Foto peliharaan perlu dikategorikan sesuai jenis peliharaan, maka kamu harus membuat folder untuk setiap jenis peliharaan yang ada dalam zip. Karena kamu tidak mungkin
-memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuhkan sesuai dengan isi zip. 
+**Soal** : Foto peliharaan perlu dikategorikan sesuai jenis peliharaan, maka kamu harus membuat folder untuk setiap jenis peliharaan yang ada dalam zip. Karena kamu tidak mungkin memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuhkan sesuai dengan isi zip. 
 * Fungsi untuk menghilangkan 4 indeks terakhir dari sebuah string
 ```
   char* cut(char *arr){
@@ -82,7 +81,7 @@ memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuh
     return cuts;
   }
 ```
-  Menggunakan fungsi *cut* untuk setiap file foto agar string nama file tersebut dapat digunakan untuk membuat folder untuk setiap jenis peliharaan dan nama file foto          peliharaan. 
+* Menggunakan fungsi *cut* pada setiap file foto agar string nama file tersebut dapat digunakan untuk membuat folder untuk setiap jenis peliharaan dan nama file foto          peliharaan. Fungsi ini akan menghilangkan string *.jpg* pada nama file sehingga ketika memotong string menggunakan *strtok_r*, string *.jpg* itu tidak diikutkan. 
 ```
   char *cutss=cut(dent->d_name); //menghilangkan.jpg
 ```
@@ -206,7 +205,7 @@ memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuh
 2. Kami menggunakan strtok_r untuk memotong file name foto agar masing-masing potongan tersebut dapat disimpan di sebuah char dan digunakan untuk membuat folder dan isi file    keterangan.txt. Kendalanya yaitu tidak bisa membuat folder kategori, disebabkan file name yang dipotong tersebut memiliki .jpg pada akhir nama file. Oleh karena itu, kami    menggunakan fungsi ``cut`` untuk menghapus 4 indeks terakhir dari nama file.
 3. Pada saat memindahkan foto ke masing-masing folder kategori, ada beberapa file foto yang tidak berhasil dipindahkan. Hal itu disebabkan kami menggunakan ``func`` ketika      mengunzip. Dimana fungsi tersebut digunakan untuk mempersingkat fork sehingga akan melakukan wait apabila bukan proses child. Solusinya, kami menggunakan ``execv`` dan        proses setelah unzip diletakkan pada parent process.
 
-### Screenshoot Error
+### Screenshot Error
 1. Kendala no 1
 ![image](https://user-images.githubusercontent.com/75319371/115656412-65331800-a35f-11eb-8ebc-76fdc43104ac.png)
 2. Kendala no 2
@@ -370,12 +369,14 @@ argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti 
 1. Pada saat mengerjakan no 3b, kami tidak bisa mendownload foto dari link tersebut. Solusinya, kami harus menggunakan *usr* pada *execv(/usr/bin/wget*) ketika mendownload foto.
 2. Pada saat mengerjakan no 3e, kami tidak bisa menjalankan argumen **-x**. Seharusnya program akan menyelesaikan proses terakhir, baru kemudian berhenti. Tetapi, proses tetap berjalan. Permasalahan tersebut disebabkan kami menggunakan ``func1`` untuk mengezip file. Karena pada ``func1`` akan melakukan fork lagi, sehingga proses akan terus berjalan. Solusinya, kami menggunakan ``execv`` untuk mengezip file.
 
-### Screenshoot Error
+### Screenshot Error
+* Error penulisan syntax *fputs* yang seharusnya *fput*
+![image](https://user-images.githubusercontent.com/75319371/115953599-4626b880-a50e-11eb-91a9-380057c62854.png)
 
 ### Hasil ketika berhasil menjalankan semua proses
-* File zip foto dan *status.txt*
+* File zip yang berisi 10 foto dan status.txt <br />
 ![image](https://user-images.githubusercontent.com/75319371/115657308-d921f000-a360-11eb-9615-d0fb3cd4040d.png)
-* Isi *status.txt*
+* Isi *status.txt*, berisi pesan *Download Success* yang telah dienkripsi <br />
 ![image](https://user-images.githubusercontent.com/75319371/115657386-f5be2800-a360-11eb-8559-7f9dffadfc7c.png)
 
 
