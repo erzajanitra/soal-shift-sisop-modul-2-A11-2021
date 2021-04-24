@@ -10,72 +10,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <dirent.h>
 
- char *files[] = {"Musyik","Pyoto","Fylm"};
- char *oldfiles[] = {"Musik_for_Stevany.zip","Foto_for_Stevany.zip","Film_for_Stevany.zip"};
- char *folders[] = {"MUSIK","FOTO","FILM"};
- char *links[] = {"drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download",
-"drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download",
-"drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download"};
-
-
-void download(char *link, char *filename){
-
-	pid_t child_id;
-	int status;
-	child_id = fork();
-
- 	if(child_id < 0){
-		exit(EXIT_FAILURE);
- 	}
-
-	if(child_id == 0){//ini child
-		char *download[] = {"wget","-q",link,"-O",filename,NULL};
-		execv("/bin/wget",download);
-	}else{//ini parent
-		wait(&status); return;
-	}
-
-}
-
-void unzip(char *filename){
-
-	pid_t child_id;
-	int status;
-	child_id = fork();
-
- 	if(child_id < 0){
-		exit(EXIT_FAILURE);
- 	}
-
-	if(child_id == 0){//ini child
-		char *unzip[] = {"unzip","-q",filename,NULL};
-		execv("/bin/unzip",unzip);
-	}else{//ini parent
-		wait(&status); return;
-	}
-
-}
-
-
-void makedir(char *newfile){
-
-	pid_t child_id;
-	int status;
-	child_id = fork();
-
- 	if(child_id < 0){
-		exit(EXIT_FAILURE);
- 	}
-
-	if(child_id == 0){//ini child
-		char *mkdir[] = {"mkdir",newfile,NULL};
-		execv("/bin/mkdir",mkdir);
-	}else{//ini parent
-		wait(&status);return;
-		//wait(&status);
-	}
-}
 
 void move(char *oldfile, char *newfile){
 
@@ -83,65 +19,161 @@ void move(char *oldfile, char *newfile){
 	int status;
 	child_id = fork();
 
-	char current[1000] = "/home/tsania/Documents/sisopshift2/";
-	strcat(current,oldfile);
-
- 	if(child_id < 0){
+	if(child_id < 0){
 		exit(EXIT_FAILURE);
  	}
 
 	if(child_id == 0){//ini child
-		strcat(current,"/.");
-		char *move[] = {"cp","-R",current,newfile,NULL};
-		execv("/bin/cp",move);
+		
+		char *moves[] = {"mv",oldfile,newfile,NULL};
+		execv("/usr/bin/mv",moves);
 
 	}else{//ini parent
-		wait(&status);return;
+		while((wait(&status))>0);
 	}
 }
-
 
 void re_move(char *oldfile, char *newfile){
 
+	char current[1000];
+	struct dirent *dent;
+	DIR *dir=opendir(oldfile);
+
+ 	if(dir!=NULL){
+        while((dent=readdir(dir))!=NULL){
+                    //hidden file       
+            if(strcmp(dent->d_name,".")!=0 || strcmp(dent->d_name,"..")!=0){
+                strcpy(current,oldfile);
+                strcat(current,"/");
+                strcat(current,dent->d_name);
+                move(current,newfile);
+            }
+        }
+ 	}
+
+	(void) closedir(dir);
+}
+
+void func1(char command[],char *arg[]){
+  
+  int status;
+  pid_t pid;
+  pid=fork();
+  if(pid==0){
+    printf("%s",command);
+    execv(command,arg);
+  }
+  else{
+     ((wait(&status))>0);
+     //return;
+   }
+}
+
+void downloadft(){
+
 	pid_t child_id;
 	int status;
 	child_id = fork();
-
-	char current[1000] = "/home/tsania/Documents/sisopshift2/";
-	strcat(current,oldfile);
 
  	if(child_id < 0){
 		exit(EXIT_FAILURE);
  	}
 
 	if(child_id == 0){//ini child
-		strcat(current,"/");
-		char *remove[] = {"rm","-rf",current,NULL};
-		execv("/bin/rm",remove);
-	}else{//ini parent
-		wait(&status);return;
-		//while((wait(&status))>0);
+		pid_t child1;
+		int status1;
+		child1 = fork();
+		char link[100]={"drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download"};
+		if(child1< 0){
+			exit(EXIT_FAILURE);
+ 		}
+		if(child1==0){
+		char *download[] = {"wget","-b","--no-check-certificate",link,"-O","Foto_for_Stevany.zip",NULL};
+		execv("/usr/bin/wget",download);
+		}else{//ini parent
+			while((wait(&status1))>0);
+			sleep(5);
+			char *unzip[] = {"unzip","/home/tsania/Documents/sisopshift2/Foto_for_Stevany.zip",NULL};
+			execv("/usr/bin/unzip",unzip);
+		}
 	}
+	else{
+		while((waitpid(child_id,&status,0))>0);
+		re_move("FOTO","Pyoto");
+	}
+
 }
 
-void zipfile(char file1[], char file2[], char file3[]){
+void downloadms(){
 
 	pid_t child_id;
 	int status;
 	child_id = fork();
+	//char links[100] = {"drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download"};
 
  	if(child_id < 0){
 		exit(EXIT_FAILURE);
  	}
 
 	if(child_id == 0){//ini child
-		char *zip[] = {"zip","-rm","Lopyu_Stevany",file1,file2,file3,NULL};
-		execv("/bin/zip",zip);
-	}else{//ini parent
-		wait(&status);return;
+		pid_t child1;
+		int status1;
+		child1 = fork();
+		char link[100]={"drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download"};
+		if(child1< 0){
+			exit(EXIT_FAILURE);
+ 		}
+		 if(child1==0){
+		char *download[] = {"wget","-b","--no-check-certificate",link,"-O","Musik_for_Stevany.zip",NULL};
+		execv("/usr/bin/wget",download);
+		}else{//ini parent
+			while((wait(&status1))>0);
+			sleep(5);
+			char *unzip[] = {"unzip","/home/tsania/Documents/sisopshift2/Musik_for_Stevany.zip",NULL};
+			execv("/usr/bin/unzip",unzip);
+		}
 	}
+	else{
+		while((waitpid(child_id,&status,0))>0);
+		re_move("MUSIK","Musyik");
+	}
+
 }
 
+void downloadfi(){
+
+	pid_t child_id;
+	int status;
+	child_id = fork();
+	//char link[100]={"drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download"};
+ 	if(child_id < 0){
+		exit(EXIT_FAILURE);
+ 	}
+
+	if(child_id == 0){//ini child
+		pid_t child1;
+		int status1;
+		child1 = fork();
+		char link[100]={"drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download"};
+		if(child1< 0){
+			exit(EXIT_FAILURE);
+ 		}
+		 if(child1==0){
+		char *download[] = {"wget","-b","--no-check-certificate",link,"-O","Film_for_Stevany.zip",NULL};
+		execv("/usr/bin/wget",download);
+		}else{//ini parent
+			while((wait(&status1))>0);
+			sleep(5);
+			char *unzip[] = {"unzip","/home/tsania/Documents/sisopshift2/Film_for_Stevany.zip",NULL};
+			execv("/usr/bin/unzip",unzip);
+		}
+	}
+	else{
+		while((waitpid(child_id,&status,0))>0);
+		re_move("FILM","Fylm");
+	}
+
+}
 
 void do_something(){
 	int i;
@@ -154,124 +186,100 @@ void do_something(){
  	}
 
 	if(child_id == 0){
+		pid_t child1;
+		int status1;
+		child1=fork();
+
+		if(child1 < 0){
+			exit(EXIT_FAILURE);
+ 		}
+		if(child1 == 0){
+			pid_t child2;
+			int status2;
+			child2=fork();
+			if(child2 < 0){
+				exit(EXIT_FAILURE);
+ 			}
+			if(child2 == 0){
+				char *mkdir[] = {"mkdir","Musyik","Pyoto","Fylm",NULL};
+				execv("/bin/mkdir",mkdir);
+ 			}
+			else{
+				while(wait((&status2))>0);
+				downloadft();
+				_exit(1);
+			}
+		}
+		else{
+			while(wait((&status1))>0);
+			downloadfi();
+			_exit(1);
+		}
 		
-		for(i=0;i<3;i++){
-			makedir(files[i]);
-		}
-		for(i=0;i<3;i++){
-			download(links[i],oldfiles[i]);
-		}
-		for(i=0;i<3;i++){
-			unzip(oldfiles[i]);
-		}
-		for(i=0;i<3;i++){
-			move(folders[i],files[i]);
-		}
-			
 	}else{
-		wait(&status); return;
+		while(wait((&status))>0);
+		downloadms();
+		_exit(1);
 	}
 }
 
-
-void zipfolders(){
-	int i;
-	pid_t child_id;
-	int status;
-	child_id = fork();
-
- 	if(child_id < 0){
-		exit(EXIT_FAILURE);
- 	}
-
-	if(child_id == 0){
-		zipfile("Musyik","Pyoto","Fylm");
-		sleep(10);
-
-		for(i=0;i<3;i++){
-			re_move(folders[i],files[i]);
-		}
-	}else{
-		wait(&status);return;
-	}
-}
 
 int main(){
 
 	pid_t pid,sid;
 	pid = fork();
 
-if (pid < 0){
-	printf("PID Fail\n");
-	exit(EXIT_FAILURE);
-}
+	if (pid < 0){
+		printf("PID Fail\n");
+		exit(EXIT_FAILURE);
+	}
 
-if (pid > 0){
-	printf("PID of Child Process %d\n", pid);
-	exit(EXIT_SUCCESS);
-}
+	if (pid > 0){
+		//printf("PID of Child Process %d\n", pid);
+		exit(EXIT_SUCCESS);
+	}
 
 
-umask(0);
+	umask(0);
 
-sid = setsid();
+	sid = setsid();
 
-if (sid < 0){
-	printf("SID Fail\n");
-	exit(EXIT_FAILURE);
-}
+	if (sid < 0){
+		//printf("SID Fail\n");
+		exit(EXIT_FAILURE);
+	}
 
-char address[1000];
-getcwd(address,sizeof(address));
-strcat(address,"/");
 
-if((chdir(address))<0){
-	exit(EXIT_FAILURE);
-}
+	if((chdir("/home/tsania/Documents/sisopshift2/"))<0){
+		exit(EXIT_FAILURE);
+	}
 
-close(STDIN_FILENO);
-close(STDOUT_FILENO);
-close(STDERR_FILENO);
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
 
 while(1){
- time_t t = time(NULL);
- char b_day[100];
- struct tm *tmp = localtime(&t);
- strftime(b_day,sizeof(b_day),"%Y-%m-%d %H:%M:%S",tmp);
- char target1[]="2021-04-09 16:21:59";
- char target2[]="2021-04-09 22:21:59";
-
-
-	pid_t child, child2;
-	child = fork();
-
-if (child < 0){
-	printf("PID Fail\n");
-	exit(EXIT_FAILURE);
-}
-
-if (child == 0){
+	time_t t = time(NULL);
+	char b_day[100];
+	struct tm tmp = *localtime(&t);
+	strftime(b_day,sizeof(b_day),"%Y-%m-%d %H:%M:%S",&tmp);
+	char target1[]="2021-04-09 16:22:00";
+	char target2[]="2021-04-09 22:22:00";
 
 	if(strcmp(b_day,target1)==0){
-//printf("Berhasil Target 1\n");
+		printf("Berhasil Target 1\n");
 		do_something();
-		sleep(40);
+		
 	}
 
-	if(strcmp(b_day,target2)==0){
-//printf("Berhasil Target 2\n");
-		zipfolders();
-		sleep(45);
+	else if(strcmp(b_day,target2)==0){
+	printf("Berhasil Target 2\n");
+		char *zip[] = {"zip","-rmq","Lopyu_Stevany","Pyoto","Fylm","Musyik","FILM","FOTO","MUSIK",NULL};
+		func1("/usr/bin/zip",zip);
 	}
 
-}else{
-		sleep(40);
-		continue;
-
 }
-
-}
+sleep(1);
 
 return 0;
 }
-
