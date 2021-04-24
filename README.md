@@ -1,30 +1,189 @@
 # soal-shift-sisop-modul-2-A11-2021
 
 ## Soal 1 
-[no 1]()
+[no 1](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal1/soal1.c)
 
 ### 1a
 **Soal** : (a) Dikarenakan Stevany sangat menyukai huruf Y, Steven ingin nama folder-foldernya adalah Musyik untuk mp3, Fylm untuk mp4, dan Pyoto untuk jpg.
+```
+            pid_t child2;
+			int status2;
+			child2=fork();
+			if(child2 < 0){
+				exit(EXIT_FAILURE);
+ 			}
+			if(child2 == 0){
+				char *mkdir[] = {"mkdir","Musyik","Pyoto","Fylm",NULL};
+				execv("/bin/mkdir",mkdir);
+ 			}
+```
+pembuatan folder baru diletakkan pada child process terdalam pada fungsi ``do_something()`` agar proses ini dieksekusi paling awal oleh program berurutan sebagaimana output yang diminta.
 
 ### 1b
 **Soal** : (b) untuk musik Steven mendownloadnya dari link di bawah, film dari link di bawah lagi, dan foto dari link dibawah juga :).
+```
+        pid_t child1;
+		int status1;
+		child1 = fork();
+		char link[100]={"drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download"};
+		if(child1< 0){
+			exit(EXIT_FAILURE);
+ 		}
+		 if(child1==0){
+		char *download[] = {"wget","-b","--no-check-certificate",link,"-O","Film_for_Stevany.zip",NULL};
+		execv("/usr/bin/wget",download);
+		}
+```
+source code di atas berfungsi untuk mendownload zipfile 'Film_for_Stevany.zip' dari link film yang sudah disediakan. proses ini diletakkan di dalam fungsi ``downloadfi()``
+
+```
+        if(child_id == 0){//ini child
+		pid_t child1;
+		int status1;
+		child1 = fork();
+		char link[100]={"drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download"};
+		if(child1< 0){
+			exit(EXIT_FAILURE);
+ 		}
+		 if(child1==0){
+		char *download[] = {"wget","-b","--no-check-certificate",link,"-O","Musik_for_Stevany.zip",NULL};
+		execv("/usr/bin/wget",download);
+		}
+```
+source code di atas berfungsi untuk mendownload zipfile 'Musik_for_Stevany.zip' dari link musik yang sudah disediakan. proses ini diletakkan di dalam fungsi ``downloadms()``
+
+```
+        pid_t child1;
+		int status1;
+		child1 = fork();
+		char link[100]={"drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download"};
+		if(child1< 0){
+			exit(EXIT_FAILURE);
+ 		}
+		if(child1==0){
+		char *download[] = {"wget","-b","--no-check-certificate",link,"-O","Foto_for_Stevany.zip",NULL};
+		execv("/usr/bin/wget",download);
+		}
+```
+
+source code di atas berfungsi untuk mendownload zipfile 'Foto_for_Stevany.zip' dari link foto yang sudah disediakan. proses ini diletakkan di dalam fungsi ``downloadft()``
 
 ### 1c
 **Soal** : (c) Steven tidak ingin isi folder yang dibuatnya berisikan zip, sehingga perlu meng-extract-nya setelah didownload.
+```
+        else{//ini parent
+			while((wait(&status1))>0);
+			sleep(5);
+			char *unzip[] = {"unzip","/home/tsania/Documents/sisopshift2/Foto_for_Stevany.zip",NULL};
+			execv("/usr/bin/unzip",unzip);
+		}
+```
+source code di atas berfungsi untuk meng-unzip zipfile 'Foto_for_Stevany.zip' yang sudah terdownload, prosesnya bersambung dengan download dimana proses unzip ini berposisi sebagai parent process sehingga prosesnya dijalankan setelah child processnya yaitu download sudah dikerjakan.
+
+```
+        else{//ini parent
+			while((wait(&status1))>0);
+			sleep(5);
+			char *unzip[] = {"unzip","/home/tsania/Documents/sisopshift2/Film_for_Stevany.zip",NULL};
+			execv("/usr/bin/unzip",unzip);
+		}
+```
+source code di atas berfungsi untuk meng-unzip zipfile 'Film_for_Stevany.zip' yang sudah terdownload, prosesnya bersambung dengan download dimana proses unzip ini berposisi sebagai parent process sehingga prosesnya dijalankan setelah child processnya yaitu download sudah dikerjakan.
+
+```
+        else{//ini parent
+			while((wait(&status1))>0);
+			sleep(5);
+			char *unzip[] = {"unzip","/home/tsania/Documents/sisopshift2/Musik_for_Stevany.zip",NULL};
+			execv("/usr/bin/unzip",unzip);
+		}
+```
+
+source code di atas berfungsi untuk meng-unzip zipfile 'Musik_for_Stevany.zip' yang sudah terdownload, prosesnya bersambung dengan download dimana proses unzip ini berposisi sebagai parent process sehingga prosesnya dijalankan setelah child processnya yaitu download sudah dikerjakan.
+
 
 ### 1d
 **Soal** : (d) serta memindahkannya ke dalam folder yang telah dibuat (hanya file yang dimasukkan).
+fungsi yang menjalankan proses pemindahan file dalam direktori hasil unzip berlaku untuk semua pemanggilannya di fungsi lain yaitu pada fungsi ``re_move(file1,file2);``
+```
+void re_move(char *oldfile, char *newfile){
+
+	char current[1000];
+	struct dirent *dent;
+	DIR *dir=opendir(oldfile);
+
+ 	if(dir!=NULL){
+        while((dent=readdir(dir))!=NULL){
+                    //hidden file       
+            if(strcmp(dent->d_name,".")!=0 || strcmp(dent->d_name,"..")!=0){
+                strcpy(current,oldfile);
+                strcat(current,"/");
+                strcat(current,dent->d_name);
+                move(current,newfile);
+            }
+        }
+ 	}
+
+	(void) closedir(dir);
+}
+
+```
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+```   else{
+		while((waitpid(child_id,&status,0))>0);
+		re_move("FOTO","Pyoto");
+	}
+```
+di atas adalah source code pemanggilan fungsi ``re_move()`` oleh proses pemindahan isi folder FOTO ke folder baru "Pyoto". prosesnya dieksekusi setelah unzipping zipfile yang terdownload dan terletak di setiap fungsi ``downloadms()``,``downloadft()``, dan ``downloadfi()``. Jadi pada setiap fungsi yang sebelumnya disebutkan terdapat nested fork agar proses dapat dijalankan berurutan tidak terbatas 1 pasang child-parent terlebih multiple child-parent process.
+
+```   else{
+		while((waitpid(child_id,&status,0))>0);
+		re_move("MUSIK","Musyik");
+	}
+```
+di atas adalah source code pemanggilan fungsi ``re_move()`` oleh proses pemindahan isi folder MUSIK ke folder baru "Musyik". prosesnya dieksekusi setelah unzipping zipfile yang terdownload dan terletak di setiap fungsi ``downloadms()``,``downloadft()``, dan ``downloadfi()``. Jadi pada setiap fungsi yang sebelumnya disebutkan terdapat nested fork agar proses dapat dijalankan berurutan tidak terbatas 1 pasang child-parent terlebih multiple child-parent process.
+
+```   else{
+		while((waitpid(child_id,&status,0))>0);
+		re_move("FILM","Fylm");
+	}
+```
+di atas adalah source code pemanggilan fungsi ``re_move()`` oleh proses pemindahan isi folder FILM ke folder baru "Fylm". prosesnya dieksekusi setelah unzipping zipfile yang terdownload dan terletak di setiap fungsi ``downloadms()``,``downloadft()``, dan ``downloadfi()``. Jadi pada setiap fungsi yang sebelumnya disebutkan terdapat nested fork agar proses dapat dijalankan berurutan tidak terbatas 1 pasang child-parent terlebih multiple child-parent process.
 
 ### 1e
 **Soal** : (e) Untuk memudahkan Steven, ia ingin semua hal di atas berjalan otomatis 6 jam sebelum waktu ulang tahun Stevany).
+```
+time_t t = time(NULL);
+	char b_day[100];
+	struct tm tmp = *localtime(&t);
+	strftime(b_day,sizeof(b_day),"%Y-%m-%d %H:%M:%S",&tmp);
+	char target1[]="2021-04-09 16:22:00";
+	char target2[]="2021-04-09 22:22:00";
+
+	if(strcmp(b_day,target1)==0){
+		printf("Berhasil Target 1\n");
+		do_something();
+		
+	}
+
+```
+source code di atas berfungsi untuk mendeklarasikan jam untuk proses pertama dan kedua. dimana proses pertama akan dilakukan perbandingan string localtime yang disimpan pada array of string bervariabel b_day. kemudian jika perbandingan kedua string ``b_day`` dan ``target1`` sama maka proses pertama yang terdiri dari download, unzip, dan pemindahan isi file lama ke folder baru akan tereksekusi secara otomatis.
 
 ### 1f
 **Soal** : (f) Setelah itu pada waktu ulang tahunnya Stevany, semua folder akan di zip dengan nama Lopyu_Stevany.zip dan semua folder akan di delete(sehingga hanya menyisakan .zip).
+```
+	else if(strcmp(b_day,target2)==0){
+	printf("Berhasil Target 2\n");
+		char *zip[] = {"zip","-rmq","Lopyu_Stevany","Pyoto","Fylm","Musyik","FILM","FOTO","MUSIK",NULL};
+		func1("/usr/bin/zip",zip);
+	}
+```
+merujuk pada source code nomor sebelumnya proses kedua yaitu proses zipping folder-folder baru sekaligus pembersihan folder-folder lama beserta isinya dieksekusi oleh pembandingan string ``b_day`` yang bervalue localtime dengan string target2 yaitu 6 jam setelah target1 seperti yang diminta pada soal. dengan cara yang sama dengan nomor sebelumnya, jika pembandingan kedua string valid bernilai sama maka proses zipping dan folder removal akan dieksekusi.
 
 ### Kendala yang dialami
-
-
-
+- program sebelum revisi menggunakan loop dan fungsi sleep() yang banyak pada awalnya berjalan normal kemudian dicoba beberapa kali justru mengakibatkan VM crash. masih belum tau penyebabnya.
+- belum terlalu paham cara kerja nested-fork dan bagaimana urutan spawningnya dengan kompleksitas prosesnya.
+- dengan command yang sesuai masih saja ikut mendownload logfile yang tidak diminta untuk ikut muncul pada proses download zipfile.
 
 ## Soal 2
 [no 2](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal2/soal2.c)
