@@ -180,6 +180,11 @@ source code di atas berfungsi untuk mendeklarasikan jam untuk proses pertama dan
 ```
 merujuk pada source code nomor sebelumnya proses kedua yaitu proses zipping folder-folder baru sekaligus pembersihan folder-folder lama beserta isinya dieksekusi oleh pembandingan string ``b_day`` yang bervalue localtime dengan string target2 yaitu 6 jam setelah target1 seperti yang diminta pada soal. dengan cara yang sama dengan nomor sebelumnya, jika pembandingan kedua string valid bernilai sama maka proses zipping dan folder removal akan dieksekusi.
 
+##Hasil Program
+- pada 9 April 16:22
+![image]()
+- pada 9 April 22:22
+
 ### Kendala yang dialami
 - program sebelum revisi menggunakan loop dan fungsi sleep() yang banyak pada awalnya berjalan normal kemudian dicoba beberapa kali justru mengakibatkan VM crash. masih belum tau penyebabnya.
 - belum terlalu paham cara kerja nested-fork dan bagaimana urutan spawningnya dengan kompleksitas prosesnya.
