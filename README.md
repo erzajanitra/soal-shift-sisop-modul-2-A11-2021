@@ -182,8 +182,11 @@ merujuk pada source code nomor sebelumnya proses kedua yaitu proses zipping fold
 
 ##Hasil Program
 - pada 9 April 16:22
-![image]()
+![capt](https://user-images.githubusercontent.com/69724694/115961347-388a2680-a540-11eb-9a41-05489ca618a2.PNG)
+
 - pada 9 April 22:22
+![capt2](https://user-images.githubusercontent.com/69724694/115961369-535c9b00-a540-11eb-8eb8-f97df47825f4.PNG)
+
 
 ### Kendala yang dialami
 - program sebelum revisi menggunakan loop dan fungsi sleep() yang banyak pada awalnya berjalan normal kemudian dicoba beberapa kali justru mengakibatkan VM crash. masih belum tau penyebabnya.
