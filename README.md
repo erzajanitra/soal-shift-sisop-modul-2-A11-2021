@@ -17,10 +17,11 @@
 				execv("/bin/mkdir",mkdir);
  			}
 ```
-pembuatan folder baru diletakkan pada child process terdalam pada fungsi ``do_something()`` agar proses ini dieksekusi paling awal oleh program berurutan sebagaimana output yang diminta.
+Pembuatan folder baru diletakkan pada child process terdalam pada fungsi ``do_something()`` agar proses ini dieksekusi paling awal oleh program berurutan sebagaimana output yang diminta. Menggunakan *mkdir* untuk membuat 3 directory, yaitu "Musyik","Pyoto", dan "Fylm".
 
 ### 1b
 **Soal** : (b) untuk musik Steven mendownloadnya dari link di bawah, film dari link di bawah lagi, dan foto dari link dibawah juga :).
+* Download film pada ``downloadfi()``
 ```
         pid_t child1;
 		int status1;
@@ -34,8 +35,8 @@ pembuatan folder baru diletakkan pada child process terdalam pada fungsi ``do_so
 		execv("/usr/bin/wget",download);
 		}
 ```
-source code di atas berfungsi untuk mendownload zipfile 'Film_for_Stevany.zip' dari link film yang sudah disediakan. proses ini diletakkan di dalam fungsi ``downloadfi()``
-
+Source code di atas berfungsi untuk mendownload zipfile 'Film_for_Stevany.zip' dari link film yang sudah disediakan. Link download di simpan pada sebuah char bernama *link* yang akan digunakan pada *wget*. Lalu, proses ini diletakkan di dalam fungsi ``downloadfi()``
+* Download musik pada ``downloadms()``
 ```
         if(child_id == 0){//ini child
 		pid_t child1;
@@ -50,8 +51,8 @@ source code di atas berfungsi untuk mendownload zipfile 'Film_for_Stevany.zip' d
 		execv("/usr/bin/wget",download);
 		}
 ```
-source code di atas berfungsi untuk mendownload zipfile 'Musik_for_Stevany.zip' dari link musik yang sudah disediakan. proses ini diletakkan di dalam fungsi ``downloadms()``
-
+Source code di atas berfungsi untuk mendownload zipfile 'Musik_for_Stevany.zip' dari link film yang sudah disediakan. Link download di simpan pada sebuah char bernama *link* yang akan digunakan pada *wget*. Lalu, proses ini diletakkan di dalam fungsi ``downloadms()``
+* Download foto pada ``downloadft()``
 ```
         pid_t child1;
 		int status1;
@@ -65,8 +66,7 @@ source code di atas berfungsi untuk mendownload zipfile 'Musik_for_Stevany.zip' 
 		execv("/usr/bin/wget",download);
 		}
 ```
-
-source code di atas berfungsi untuk mendownload zipfile 'Foto_for_Stevany.zip' dari link foto yang sudah disediakan. proses ini diletakkan di dalam fungsi ``downloadft()``
+Source code di atas berfungsi untuk mendownload zipfile 'Foto_for_Stevany.zip' dari link film yang sudah disediakan. Link download di simpan pada sebuah char bernama *link* yang akan digunakan pada *wget*. Lalu, proses ini diletakkan di dalam fungsi ``downloadft()``
 
 ### 1c
 **Soal** : (c) Steven tidak ingin isi folder yang dibuatnya berisikan zip, sehingga perlu meng-extract-nya setelah didownload.
@@ -181,10 +181,10 @@ source code di atas berfungsi untuk mendeklarasikan jam untuk proses pertama dan
 merujuk pada source code nomor sebelumnya proses kedua yaitu proses zipping folder-folder baru sekaligus pembersihan folder-folder lama beserta isinya dieksekusi oleh pembandingan string ``b_day`` yang bervalue localtime dengan string target2 yaitu 6 jam setelah target1 seperti yang diminta pada soal. dengan cara yang sama dengan nomor sebelumnya, jika pembandingan kedua string valid bernilai sama maka proses zipping dan folder removal akan dieksekusi.
 
 ## Hasil Program
-- pada 9 April 16:22
+- pada 9 April 16:22 <br/>
 ![capt](https://user-images.githubusercontent.com/69724694/115961347-388a2680-a540-11eb-9a41-05489ca618a2.PNG)
 
-- pada 9 April 22:22
+- pada 9 April 22:22<br/>
 ![capt2](https://user-images.githubusercontent.com/69724694/115961369-535c9b00-a540-11eb-8eb8-f97df47825f4.PNG)
 
 
@@ -192,6 +192,10 @@ merujuk pada source code nomor sebelumnya proses kedua yaitu proses zipping fold
 - program sebelum revisi menggunakan loop dan fungsi sleep() yang banyak pada awalnya berjalan normal kemudian dicoba beberapa kali justru mengakibatkan VM crash. masih belum tau penyebabnya.
 - belum terlalu paham cara kerja nested-fork dan bagaimana urutan spawningnya dengan kompleksitas prosesnya.
 - dengan command yang sesuai masih saja ikut mendownload logfile yang tidak diminta untuk ikut muncul pada proses download zipfile.
+### Screenshot Error
+* Eror ketika mengganti waktu menjadi 22.22 WIB saat proses untuk 16.22 WIB belum selesai <br/>
+![err2](https://user-images.githubusercontent.com/75319371/115982286-15a15600-a5c4-11eb-8586-8f5da509ad2a.JPG)
+
 
 ## Soal 2
 [no 2](https://github.com/erzajanitra/soal-shift-sisop-modul-2-A11-2021/blob/main/soal2/soal2.c)
