@@ -70,6 +70,7 @@ Source code di atas berfungsi untuk mendownload zipfile 'Foto_for_Stevany.zip' d
 
 ### 1c
 **Soal** : (c) Steven tidak ingin isi folder yang dibuatnya berisikan zip, sehingga perlu meng-extract-nya setelah didownload.
+* Unzip *Foto_for_Stevany.zip*
 ```
         else{//ini parent
 			while((wait(&status1))>0);
@@ -79,7 +80,7 @@ Source code di atas berfungsi untuk mendownload zipfile 'Foto_for_Stevany.zip' d
 		}
 ```
 source code di atas berfungsi untuk meng-unzip zipfile 'Foto_for_Stevany.zip' yang sudah terdownload, prosesnya bersambung dengan download dimana proses unzip ini berposisi sebagai parent process sehingga prosesnya dijalankan setelah child processnya yaitu download sudah dikerjakan.
-
+* Unzip *Film_for_Stevany.zip*
 ```
         else{//ini parent
 			while((wait(&status1))>0);
@@ -89,7 +90,7 @@ source code di atas berfungsi untuk meng-unzip zipfile 'Foto_for_Stevany.zip' ya
 		}
 ```
 source code di atas berfungsi untuk meng-unzip zipfile 'Film_for_Stevany.zip' yang sudah terdownload, prosesnya bersambung dengan download dimana proses unzip ini berposisi sebagai parent process sehingga prosesnya dijalankan setelah child processnya yaitu download sudah dikerjakan.
-
+* Unzip *Musik_for_Stevany.zip*
 ```
         else{//ini parent
 			while((wait(&status1))>0);
@@ -98,13 +99,12 @@ source code di atas berfungsi untuk meng-unzip zipfile 'Film_for_Stevany.zip' ya
 			execv("/usr/bin/unzip",unzip);
 		}
 ```
-
 source code di atas berfungsi untuk meng-unzip zipfile 'Musik_for_Stevany.zip' yang sudah terdownload, prosesnya bersambung dengan download dimana proses unzip ini berposisi sebagai parent process sehingga prosesnya dijalankan setelah child processnya yaitu download sudah dikerjakan.
 
 
 ### 1d
 **Soal** : (d) serta memindahkannya ke dalam folder yang telah dibuat (hanya file yang dimasukkan).
-fungsi yang menjalankan proses pemindahan file dalam direktori hasil unzip berlaku untuk semua pemanggilannya di fungsi lain yaitu pada fungsi ``re_move(file1,file2);``
+* Fungsi yang menjalankan proses pemindahan file dalam direktori hasil unzip berlaku untuk semua pemanggilannya di fungsi lain yaitu pada fungsi ``re_move(file1,file2);``
 ```
 void re_move(char *oldfile, char *newfile){
 
@@ -126,23 +126,22 @@ void re_move(char *oldfile, char *newfile){
 
 	(void) closedir(dir);
 }
-
 ```
--------------------------------------------------------------------------------------------------------------------------------------------------------
+* Memindahkan isi FOTO ke folder baru "Pyoto"
 ```   else{
 		while((waitpid(child_id,&status,0))>0);
 		re_move("FOTO","Pyoto");
 	}
 ```
 di atas adalah source code pemanggilan fungsi ``re_move()`` oleh proses pemindahan isi folder FOTO ke folder baru "Pyoto". prosesnya dieksekusi setelah unzipping zipfile yang terdownload dan terletak di setiap fungsi ``downloadms()``,``downloadft()``, dan ``downloadfi()``. Jadi pada setiap fungsi yang sebelumnya disebutkan terdapat nested fork agar proses dapat dijalankan berurutan tidak terbatas 1 pasang child-parent terlebih multiple child-parent process.
-
+* Memindahkan isi MUSIK ke folder baru "Musyik"
 ```   else{
 		while((waitpid(child_id,&status,0))>0);
 		re_move("MUSIK","Musyik");
 	}
 ```
 di atas adalah source code pemanggilan fungsi ``re_move()`` oleh proses pemindahan isi folder MUSIK ke folder baru "Musyik". prosesnya dieksekusi setelah unzipping zipfile yang terdownload dan terletak di setiap fungsi ``downloadms()``,``downloadft()``, dan ``downloadfi()``. Jadi pada setiap fungsi yang sebelumnya disebutkan terdapat nested fork agar proses dapat dijalankan berurutan tidak terbatas 1 pasang child-parent terlebih multiple child-parent process.
-
+* Memindahkan isi FILM ke folder baru "Fylm"
 ```   else{
 		while((waitpid(child_id,&status,0))>0);
 		re_move("FILM","Fylm");
@@ -152,6 +151,7 @@ di atas adalah source code pemanggilan fungsi ``re_move()`` oleh proses pemindah
 
 ### 1e
 **Soal** : (e) Untuk memudahkan Steven, ia ingin semua hal di atas berjalan otomatis 6 jam sebelum waktu ulang tahun Stevany).
+* Menjalankan program 6 jam sebelum waktu ulang tahun
 ```
 time_t t = time(NULL);
 	char b_day[100];
@@ -171,6 +171,7 @@ source code di atas berfungsi untuk mendeklarasikan jam untuk proses pertama dan
 
 ### 1f
 **Soal** : (f) Setelah itu pada waktu ulang tahunnya Stevany, semua folder akan di zip dengan nama Lopyu_Stevany.zip dan semua folder akan di delete(sehingga hanya menyisakan .zip).
+* Menjalankan program ketika waktu ulang tahun
 ```
 	else if(strcmp(b_day,target2)==0){
 	printf("Berhasil Target 2\n");
@@ -189,9 +190,9 @@ merujuk pada source code nomor sebelumnya proses kedua yaitu proses zipping fold
 
 
 ### Kendala yang dialami
-- program sebelum revisi menggunakan loop dan fungsi sleep() yang banyak pada awalnya berjalan normal kemudian dicoba beberapa kali justru mengakibatkan VM crash. masih belum tau penyebabnya.
-- belum terlalu paham cara kerja nested-fork dan bagaimana urutan spawningnya dengan kompleksitas prosesnya.
-- dengan command yang sesuai masih saja ikut mendownload logfile yang tidak diminta untuk ikut muncul pada proses download zipfile.
+- Program sebelum revisi menggunakan loop dan fungsi sleep() yang banyak pada awalnya berjalan normal kemudian dicoba beberapa kali justru mengakibatkan VM crash. masih belum tau penyebabnya.
+- Belum terlalu paham cara kerja nested-fork dan bagaimana urutan spawningnya dengan kompleksitas prosesnya.
+- Dengan command yang sesuai masih saja ikut mendownload logfile yang tidak diminta untuk ikut muncul pada proses download zipfile.
 ### Screenshot Error
 * Eror ketika mengganti waktu menjadi 22.22 WIB saat proses untuk 16.22 WIB belum selesai <br/>
 ![err2](https://user-images.githubusercontent.com/75319371/115982286-15a15600-a5c4-11eb-8586-8f5da509ad2a.JPG)
